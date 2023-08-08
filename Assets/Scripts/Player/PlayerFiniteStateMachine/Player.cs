@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -19,6 +20,12 @@ public class Player : MonoBehaviour
     public Animator Anim { get; private set; }
     public PlayerInputHandler InputHandler { get; private set; }
     public Rigidbody2D RB { get; private set; }
+    #endregion
+
+    #region Check Transforms
+
+    [SerializeField]
+    private Transform groundCheck;
     #endregion
 
     #region Other Variables
@@ -68,9 +75,21 @@ public class Player : MonoBehaviour
         RB.velocity = workspace;
         CurrentVelocity = workspace;
     }
+
+    public void SetVelocityY(float velocity)
+    {
+        workspace.Set(CurrentVelocity.x, velocity);
+        RB.velocity = workspace;
+        CurrentVelocity = workspace;
+    }
     #endregion
 
     #region Check Functions
+
+    public bool CheckIfGrounded()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, playerData.whatIsGround);
+    }
     public void CheckIfShouldFlip(int xInput)
     {
         if(xInput != 0 && xInput != FacingDirection)
@@ -81,6 +100,10 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Other Functions
+
+    private void AnimationTrigger() => StateMachine.CurrentState.AnimationTrigger();
+
+    private void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
     private void Flip()
     {
         FacingDirection *= -1;

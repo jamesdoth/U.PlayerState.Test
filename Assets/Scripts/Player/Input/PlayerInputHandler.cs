@@ -26,4 +26,6 @@ public class PlayerInputHandler : MonoBehaviour
             JumpInput = true;
         }
     }
+
+    public void UseJumpInput() => JumpInput = false;
 }
